@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a:hover,
+input:hover,
+.form-box button:hover {
+    cursor: url("../../storage/app/public/pointer-cursor.cur"), auto; /*cursor custom*/
+}
+:root {
+    --primero: #3c3d37;
+    --segundo: #697565;
+    --tercero: #ecdfcc;
+    --cuarto: #ffa827;
+    --quinto: #ecb517;
+    --sexto: #181c14;
+}
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-image: url("../../storage/app/public/background.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.bg-form-color {
+    background-color: var(--primero);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+.button-color {
+    color: #181c14;
+    background-color: var(--cuarto);
+}
+.button-color:hover {
+    background-color: var(--quinto);
+}
+.bg-form-main-text {
+    color: var(--cuarto);
+}
+.bg-form-input {
+    background-color: var(--segundo);
+    color: var(--tercero);
+}
+.bg-form-input::placeholder {
+    color: var(--tercero);
+    opacity: 0.4;
+}
+.form-text-color {
+    color: var(--tercero);
+}
+.form-back {
+    background-color: rgba(24, 28, 20, 0.8);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.color-check {
+    accent-color: #ffa827;
+}
+.color-check a {
+    color: #ffa827;
+}
+.color-check a:hover {
+    text-decoration: underline;
+}
+.border-danger {
+    border: 2px solid rgb(227, 70, 70);
+}
+
+#password-strength-bar {
+    width: 100%;
+    background-color: #e2e8f0; /* Color de fondo de la barra */
+}
+
+#password-strength {
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+/* Colores para la fortaleza de la contraseña */
+#password-strength.weak {
+    background-color: #ef4444; /* Rojo */
+    width: 25%;
+}
+
+#password-strength.moderate {
+    background-color: #f59e0b; /* Amarillo */
+    width: 50%;
+}
+
+#password-strength.strong {
+    background-color: #10b981; /* Verde */
+    width: 75%;
+}
+
+#password-strength.very-strong {
+    background-color: var(--cuarto); /* Azul */
+    width: 100%;
+}
+
+#password-match-error {
+    display: none; /* Ocultar por defecto */
+}

@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a:hover,
+input:hover,
+.form-box button:hover {
+    cursor: url("../../storage/app/public/pointer-cursor.cur"), auto; /*cursor custom*/
+}
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-image: url("../../storage/app/public/background.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    color: #ecdfcc;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: rgba(24, 28, 20, 0.8);
+}
+
+.form-box {
+    background-color: #3c3d37;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-box h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #ffa827;
+}
+
+.form-box label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    /*border: none;*/
+    border-radius: 5px;
+    background-color: #697565;
+    color: #ecdfcc;
+    box-sizing: border-box;
+    accent-color: #ffa827;
+}
+
+.form-box input::placeholder {
+    color: #ecdfcc;
+    opacity: 0.4;
+}
+
+.form-box .checkbox {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.form-box .checkbox label {
+    font-weight: normal;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.checkbox input {
+    margin: 0;
+    width: 15px;
+    height: 15px;
+    accent-color: #ffa827;
+}
+
+.checkbox label {
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox a {
+    color: #ffa827;
+    text-decoration: none;
+}
+
+.checkbox a:hover {
+    text-decoration: underline;
+}
+
+.form-box button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #ffa827;
+    border: none;
+    border-radius: 5px;
+    color: #181c14;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-box button:hover {
+    background-color: #ecb517;
+}
+
+.form-box .login {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.form-box .login a {
+    color: #ffa827;
+    text-decoration: none;
+}
+
+.form-box .login a:hover {
+    text-decoration: underline;
+}
+
+.border-danger {
+    border: 2px solid rgb(227, 70, 70);
+}
