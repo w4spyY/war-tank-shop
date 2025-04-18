@@ -6,7 +6,7 @@
         @foreach ($tanks as $tank)
             <div class="box p-5 card-bg rounded-lg">
                 <div class="relative overflow-hidden rounded-lg">
-                    <img class="w-full h-48 object-cover" src="{{ asset('storage/' . $tank->img) }}" alt="{{ $tank->name }}">
+                    <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$tank->image_url) }}" alt="{{ $tank->name }}">
                     <img 
                         src="{{ asset('oferta/oferta.png') }}" 
                         alt="Oferta" 
@@ -33,7 +33,7 @@
         @foreach ($tanks as $tank)
             <div class="box p-5 card-bg rounded-lg">
                 <div class="overflow-hidden rounded-lg">
-                    <img class="w-full h-48 object-cover" src="{{ asset('storage/' . $tank->img) }}" alt="{{ $tank->name }}">
+                    <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$tank->image_url) }}" alt="{{ $tank->name }}">
                 </div>
                 <div class="text-center card-h1 text-2xl font-bold mt-1">
                     <p>{{ $tank->name }}</p>
@@ -55,7 +55,7 @@
         @foreach ($tanks as $tank)
             <div class="box p-5 card-bg rounded-lg">
                 <div class="overflow-hidden rounded-lg">
-                    <img class="w-full h-48 object-cover" src="{{ asset('storage/' . $tank->img) }}" alt="{{ $tank->name }}">
+                    <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$tank->image_url) }}" alt="{{ $tank->name }}">
                 </div>
                 <div class="text-center card-h1 text-2xl font-bold mt-1">
                     <p>{{ $tank->name }}</p>

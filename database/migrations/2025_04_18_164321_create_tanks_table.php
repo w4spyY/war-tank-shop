@@ -6,33 +6,33 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('tanks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->text('image_url')->nullable();
+            $table->string('name', 150);
             $table->text('description')->nullable();
-            $table->integer('capacity'); // Capacidad en litros o número de tripulantes
-            $table->decimal('price', 10, 2); // Precio en millones de dólares
+            $table->decimal('weight_kg', 10, 2)->nullable();
+            $table->integer('crew_capacity')->nullable();
+            $table->integer('fuel_capacity_liters')->nullable();
+            $table->string('fuel_type', 50)->nullable();
+            $table->integer('horsepower')->nullable();
+            $table->string('ammunition_type', 100)->nullable();
+            $table->decimal('max_speed_kmh', 5, 2)->nullable();
+            $table->decimal('price', 15, 2);
+            $table->string('armor_type', 100)->nullable();
+            $table->integer('range_km')->nullable();
+            $table->year('manufacture_year')->nullable();
+            $table->string('country', 100)->nullable();
+            $table->enum('category', ['normal', 'sale', 'outlet', 'limited', 'experimental'])->default('normal');
             $table->integer('stock')->default(0);
-            $table->string('color')->nullable();
-            $table->year('fabrication')->nullable(); // Año de fabricación
-            $table->string('provider')->nullable(); // Proveedor/fabricante
-            $table->string('img_url')->nullable(); // URL de la imagen
-            $table->string('category')->nullable(); // Categoría (medio, pesado, etc.)
-            $table->string('condition')->default('nuevo'); // nuevo, usado, restaurado
-            $table->timestamps(); // Crea created_at y updated_at
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
-        Schema::dropIfExists('war_tanks');
+        Schema::dropIfExists('tanks');
     }
 };
