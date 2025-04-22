@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\TankController;
+use App\Http\Controllers\AdminController;
 
 
 
@@ -21,10 +23,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/my-profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/my-profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/my-profile', [ProfileController::class, 'update'])->name('profile.update');
 });
+
 
 
 
@@ -48,9 +51,17 @@ Route::get('/cart', function () {
     return view('cart.index');
 })->name('cart');
 
-// MY PROFILE
-Route::get('/my-profile', function () {
-    return view('my-profile.index');
-})->name('my-profile');
+// ADMIN PANEL
+Route::get('/admin-panel', function () {
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        return view('admin.index');
+    }
+    abort(403, 'Acceso no autorizado');
+})->middleware('auth')->name('admin.panel');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/products', [AdminController::class, 'productList'])->name('admin.products.list');
+    // Otras rutas de admin...
+});
 
 require __DIR__.'/auth.php';

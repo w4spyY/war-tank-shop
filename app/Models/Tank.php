@@ -12,6 +12,7 @@ class Tank extends Model
     protected $table = 'tanks';
 
     protected $fillable = [
+        'id',
         'image_url',
         'name',
         'description',

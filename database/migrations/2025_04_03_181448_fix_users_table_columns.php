@@ -12,7 +12,6 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Verificar y agregar solo las columnas que no existen
             if (!Schema::hasColumn('users', 'lastname')) {
                 $table->string('lastname')->after('name');
             }
@@ -34,6 +33,9 @@ return new class extends Migration
             if (!Schema::hasColumn('users', 'cookies_accepted')) {
                 $table->boolean('cookies_accepted')->after('terms_accepted');
             }
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->enum('role', ['user', 'admin'])->default('user')->after('cookies_accepted');
+            }
         });
     }
 
@@ -42,6 +44,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('users', function (Blueprint $table) {
+            if (Schema::hasColumn('users', 'role')) {
+                $table->dropColumn('role');
+            }
+        });
     }
 };

@@ -2,20 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Los atributos que se pueden asignar masivamente.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -28,12 +26,13 @@ class User extends Authenticatable
         'telefono',
         'terms_accepted',
         'cookies_accepted',
+        'role',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Los atributos que deben estar ocultos al serializar.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -41,17 +40,22 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Los atributos que deben convertirse automáticamente.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'nacimiento' => 'date',
+        'terms_accepted' => 'boolean',
+        'cookies_accepted' => 'boolean',
+    ];
+
+    /**
+     * Comprobar si el usuario es admin.
+     */
+    public function isAdmin()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'nacimiento' => 'date',
-            'terms_accepted' => 'boolean',
-            'cookies_accepted' => 'boolean',
-        ];
+        return $this->role === 'admin';
     }
 }
