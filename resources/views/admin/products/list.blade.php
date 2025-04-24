@@ -1,58 +1,58 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+<div class="ms-10 me-10 mx-auto mt-10 mb-10 p-6 bg-[var(--primero)] rounded-xl shadow-lg border border-[var(--tercero)]">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Listado de Tanques</h1>
-        <div class="bg-white rounded-lg shadow-md px-4 py-2">
-            <span class="text-sm font-semibold text-gray-600">Total de productos: {{ $tanks->total() }}</span>
+        <h1 class="text-2xl font-bold text-[var(--tercero)]">Listado de Tanques</h1>
+        <div class="bg-[var(--sexto)] rounded-lg shadow-md px-4 py-2 border border-[var(--tercero)]">
+            <span class="text-sm font-semibold text-[var(--tercero)]">Total de productos: {{ $tanks->total() }}</span>
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-[var(--sexto)] rounded-lg shadow-md overflow-hidden border border-[var(--tercero)]">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+            <table class="min-w-full divide-y divide-[var(--tercero)]">
+                <thead class="bg-[var(--tercero)]">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
                             Nombre
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
                             País
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
                             Precio
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
                             Stock
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
                             Acciones
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-[var(--sexto)] divide-y divide-[var(--tercero)]">
                     @foreach ($tanks as $tank)
-                    <tr class="{{ $tank->stock <= 0 ? 'bg-red-50' : '' }}">
+                    <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $tank->name }}</div>
+                            <div class="text-sm font-medium text-[var(--tercero)]">{{ $tank->name }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500">{{ $tank->country }}</div>
+                            <div class="text-sm text-[var(--tercero)]">{{ $tank->country }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">€{{ number_format($tank->price, 2) }}</div>
+                            <div class="text-sm text-[var(--tercero)]">€{{ number_format($tank->price, 2) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $tank->stock > 10 ? 'bg-green-100 text-green-800' : 
-                                   ($tank->stock > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                                {{ $tank->stock > 10 ? 'bg-[var(--mucho)] text-[var(--sexto)]' : 
+                                   ($tank->stock > 0 ? 'bg-[var(--poco)] text-[var(--sexto)]' : 'bg-[var(--agotado)] text-[var(--sexto)]') }}">
                                 {{ $tank->stock }} unidades
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</a>
-                            <a href="#" class="text-red-600 hover:text-red-900">Eliminar</a>
+                            <a href="#" class="text-[var(--cuarto)] hover:text-[var(--quinto)] mr-3">Editar</a>
+                            <a href="#" class="text-[var(--quinto)] hover:text-red-700">Eliminar</a>
                         </td>
                     </tr>
                     @endforeach
@@ -60,8 +60,7 @@
             </table>
         </div>
 
-        <!-- Paginación -->
-        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+        <div class="bg-[var(--sexto)] px-4 py-3 border-t border-[var(--tercero)] sm:px-6">
             {{ $tanks->links() }}
         </div>
     </div>

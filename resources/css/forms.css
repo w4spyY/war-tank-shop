@@ -11,9 +11,14 @@ input:hover,
     --primero: #3c3d37;
     --segundo: #697565;
     --tercero: #ecdfcc;
+    --tercero-oscuro: #c0ad91;
     --cuarto: #ffa827;
-    --quinto: #ecb517;
+    --quinto: #cc7e09;
     --sexto: #181c14;
+
+    --mucho: #7ae260;
+    --poco: #e2c160;
+    --agotado: #e27a60;
 }
 body {
     margin: 0;
