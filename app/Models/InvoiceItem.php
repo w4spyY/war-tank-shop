@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class InvoiceItem extends Model
 {
@@ -28,13 +30,13 @@ class InvoiceItem extends Model
     ];
 
     // Relación con factura
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
     }
 
     // Relación polimórfica con productos (tanques o partes)
-    public function product()
+    public function product(): MorphTo
     {
         return $this->morphTo('product', 'product_type', 'product_id');
     }

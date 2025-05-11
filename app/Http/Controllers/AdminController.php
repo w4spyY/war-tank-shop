@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\TankPart;
 use App\Models\CartItem;
 use App\Models\InvoiceItem;
+use App\Models\Invoice;
 
 class AdminController extends Controller
 {
@@ -117,9 +118,7 @@ class AdminController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Procesar la imagen si se subió una nueva
         if ($request->hasFile('image')) {
-            // Eliminar la imagen anterior si existe
             if ($tank->image_url && File::exists(public_path($tank->image_url))) {
                 File::delete(public_path($tank->image_url));
             }
@@ -142,7 +141,6 @@ class AdminController extends Controller
 
     public function destroyTank(Tank $tank)
     {
-        // Verificar si el tanque está en algún carrito o factura
         $inCarts = CartItem::where('product_type', 'tank')->where('product_id', $tank->id)->exists();
         $inInvoices = InvoiceItem::where('product_type', 'tank')->where('product_id', $tank->id)->exists();
 
@@ -153,7 +151,6 @@ class AdminController extends Controller
             ], 422);
         }
 
-        // Eliminar la imagen si existe
         if ($tank->image_url && File::exists(public_path($tank->image_url))) {
             File::delete(public_path($tank->image_url));
         }
@@ -174,13 +171,11 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'description' => 'nullable|string',
-            'weight_kg' => 'required|numeric|min:0', // Nuevo campo
+            'weight_kg' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Procesar la imagen si se subió una nueva
         if ($request->hasFile('image')) {
-            // Eliminar la imagen anterior si existe
             if ($part->image_url && File::exists(public_path($part->image_url))) {
                 File::delete(public_path($part->image_url));
             }
@@ -203,7 +198,6 @@ class AdminController extends Controller
 
     public function destroyPart(TankPart $part)
     {
-        // Verificar si la pieza está en algún carrito o factura
         $inCarts = CartItem::where('product_type', 'part')->where('product_id', $part->id)->exists();
         $inInvoices = InvoiceItem::where('product_type', 'part')->where('product_id', $part->id)->exists();
 
@@ -242,24 +236,20 @@ class AdminController extends Controller
             'range_km' => 'required|numeric',
             'manufacture_year' => 'required|integer',
             'country' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB máximo
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Procesar la imagen
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time().'_'.$image->getClientOriginalName();
             
-            // Crear directorio si no existe
             $directory = public_path('images/tanks');
             if (!File::exists($directory)) {
                 File::makeDirectory($directory, 0755, true);
             }
             
-            // Mover la imagen al directorio
             $image->move($directory, $imageName);
             
-            // Guardar la ruta en la base de datos
             $validated['image_url'] = 'images/tanks/'.$imageName;
         }
 
@@ -284,25 +274,21 @@ class AdminController extends Controller
             'material' => 'required|string',
             'compatibility_notes' => 'required|string',
             'country' => 'required|string',
-            'weight_kg' => 'required|numeric|min:0', // Nuevo campo
+            'weight_kg' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Procesar la imagen
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time().'_'.$image->getClientOriginalName();
             
-            // Crear directorio si no existe
             $directory = public_path('images/parts');
             if (!File::exists($directory)) {
                 File::makeDirectory($directory, 0755, true);
             }
             
-            // Mover la imagen al directorio
             $image->move($directory, $imageName);
             
-            // Guardar la ruta en la base de datos
             $validated['image_url'] = 'images/parts/'.$imageName;
         }
 
@@ -313,5 +299,54 @@ class AdminController extends Controller
             'message' => 'Pieza creada correctamente',
             'redirect' => route('admin.catalog.products')
         ]);
+    }
+
+    public function salesHistory()
+    {
+        $invoices = Invoice::with(['user', 'items'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        
+        return view('admin.sales.history', compact('invoices'));
+    }
+
+    public function stockGraph()
+    {
+        return view('admin.stock.graph');
+    }
+
+    public function getStockData()
+    {
+        $data = [
+            'tanks' => Tank::select('name', 'stock')
+                        ->orderBy('stock', 'desc')
+                        ->get(),
+            'parts' => TankPart::select('name', 'stock')
+                        ->orderBy('stock', 'desc')
+                        ->get()
+        ];
+
+        return response()->json($data);
+    }
+
+    public function salesGraph()
+    {
+        return view('admin.sales.graph');
+    }
+
+    public function getSalesData()
+    {
+        $data = [
+            'tanks' => Tank::select('name', 'sells')
+                        ->where('sells', '>', 0)
+                        ->orderBy('sells', 'desc')
+                        ->get(),
+            'parts' => TankPart::select('name', 'sells')
+                        ->where('sells', '>', 0)
+                        ->orderBy('sells', 'desc')
+                        ->get()
+        ];
+
+        return response()->json($data);
     }
 }

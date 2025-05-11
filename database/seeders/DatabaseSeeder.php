@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             TankSeeder::class,
             TankPartSeeder::class,
             AdminUserSeeder::class,
+            SalesSeeder::class,
+            UserOrdersSeeder::class,
         ]);
     }
 }

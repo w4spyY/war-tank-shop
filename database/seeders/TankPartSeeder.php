@@ -13,7 +13,6 @@ class TankPartSeeder extends Seeder
         $now = Carbon::now();
         $imagePath = 'test/part1.jpg';
 
-        // Obtener IDs de categorías para partes
         $turretsCategory = DB::table('categories')->where('name', 'Torretas')->first()->id;
         $suspensionCategory = DB::table('categories')->where('name', 'Sistemas de Suspensión')->first()->id;
         $cannonsCategory = DB::table('categories')->where('name', 'Cañones')->first()->id;

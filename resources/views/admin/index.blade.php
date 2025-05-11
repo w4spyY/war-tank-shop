@@ -35,21 +35,21 @@
         <h2 class="text-xl font-semibold text-[var(--tercero)] mb-4">Gestión de Ventas</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-            <a href="#" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+            <a href="{{route ('admin.sales.history') }}" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                 </svg>
                 <span>Historial de Ventas</span>
             </a>
             
-            <a href="#" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+            <a href="{{route ('admin.stock.graph')}}" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                 </svg>
-                <span>Estadísticas de Ventas</span>
+                <span>Gráfico de Stock</span>
             </a>
             
-            <a href="#" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+            <a href="{{route ('admin.sales.graph')}}" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
@@ -63,21 +63,21 @@
         <h2 class="text-xl font-semibold text-[var(--tercero)] mb-4">Promociones</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-            <a href="#" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+            <a href="#" class="flex items-center p-4 bg-gray-400 text-gray-600 rounded-lg cursor-not-allowed" aria-disabled="true">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
                 </svg>
                 <span>Aplicar Descuentos</span>
             </a>
             
-            <a href="#" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+            <a href="#" class="flex items-center p-4 bg-gray-400 text-gray-600 rounded-lg cursor-not-allowed" aria-disabled="true">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                 </svg>
                 <span>Ofertas Especiales</span>
             </a>
             
-            <a href="#" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+            <a href="#" class="flex items-center p-4 bg-gray-400 text-gray-600 rounded-lg cursor-not-allowed" aria-disabled="true">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>

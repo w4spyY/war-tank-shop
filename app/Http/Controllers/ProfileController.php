@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\Invoice;
 
 class ProfileController extends Controller
 {
@@ -14,6 +15,7 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
+
     public function edit(Request $request)
     {
         return view('my-profile.edit', [
@@ -45,5 +47,20 @@ class ProfileController extends Controller
         ]));
 
         return Redirect::route('profile.show')->with('status', 'Perfil actualizado correctamente');
+    }
+
+    public function orders(Request $request)
+    {
+        $user = $request->user();
+        
+        $invoices = Invoice::with(['items', 'payment'])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('my-profile.orders', [
+            'user' => $user,
+            'invoices' => $invoices
+        ]);
     }
 }

@@ -24,7 +24,7 @@ function addToCart(product) {
             name: product.name,
             price: product.price,
             image: product.image,
-            type: product.type, // 'tank' o 'part'
+            type: product.type, //tank o part
             quantity: 1,
             total: product.price
         });
@@ -32,7 +32,6 @@ function addToCart(product) {
 
     updateCartTotal(cart);
     saveCart(cart);
-    alert('Producto añadido al carrito!');
 }
 
 function removeFromCart(id, type) {
@@ -141,7 +140,8 @@ async function syncCartWithServer() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // En la página de productos
+    
+    //pagina de productos
     document.querySelectorAll('.btn-add-to-cart').forEach(button => {
         button.addEventListener('click', () => {
             const product = {
@@ -149,14 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: button.dataset.productName,
                 price: parseFloat(button.dataset.productPrice),
                 image: button.dataset.productImage,
-                type: button.dataset.productType === 'part' ? 'part' : 'tank' // Solo 'tank' o 'part'
+                type: button.dataset.productType === 'part' ? 'part' : 'tank'
             };
             addToCart(product);
             renderCart();
         });
     });
 
-    // En la página del carrito
     if (window.location.pathname === '/cart' || window.location.pathname === '/cart/') {
         renderCart();
 

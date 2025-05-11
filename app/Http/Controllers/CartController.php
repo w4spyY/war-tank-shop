@@ -81,7 +81,6 @@ class CartController extends Controller
                     continue;
                 }
 
-                // Validar que el tipo sea 'tank' o 'part'
                 if (!in_array($item['type'], ['tank', 'part'])) {
                     continue;
                 }
@@ -92,7 +91,7 @@ class CartController extends Controller
                     [
                         'cart_id' => $cart->id,
                         'product_id' => $item['id'],
-                        'product_type' => $item['type'] // Usar directamente 'tank' o 'part'
+                        'product_type' => $item['type']
                     ],
                     [
                         'quantity' => $item['quantity'],
@@ -185,7 +184,6 @@ class CartController extends Controller
             ]);
 
             foreach ($cart->items as $item) {
-                // Mapeo para invoice_items (puede ser diferente al de cart_items)
                 $productType = $item->product_type === 'tank' 
                     ? 'App\Models\Tank' 
                     : 'App\Models\TankPart';
@@ -232,7 +230,6 @@ class CartController extends Controller
 
     private function getProductName($cartItem)
     {
-        // Obtener el modelo basado en el tipo (tank/part)
         $product = $cartItem->product_type === 'tank' 
             ? Tank::find($cartItem->product_id)
             : TankPart::find($cartItem->product_id);

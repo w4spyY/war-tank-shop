@@ -22,20 +22,30 @@
             <p class="mt-2 text-[var(--tercero)]"><strong>Fecha de Nacimiento:</strong> {{ $user->nacimiento ? $user->nacimiento->format('d/m/Y') : 'No disponible' }}</p>
             <p class="mt-2 text-[var(--tercero)]"><strong>Email:</strong> {{ $user->email }}</p>
             <p class="mt-2 text-[var(--tercero)]"><strong>Teléfono:</strong> {{ $user->telefono ?? 'No disponible' }}</p>
-            <p class="mt-2 text-[var(--tercero)]">
-                <strong>Email verificado:</strong> 
-                @if($user->hasVerifiedEmail())
-                    <span class="text-green-500">Sí</span>
-                @else
-                    <span class="text-red-500">No</span>
+            <div class="mt-2">
+                <p class="text-[var(--tercero)] inline-flex items-center">
+                    <strong>Email verificado:</strong> 
+                    @if($user->hasVerifiedEmail())
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 ml-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 ml-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    @endif
+                </p>
+                @if(!$user->hasVerifiedEmail())
+                <div class="mt-1">
                     <form method="POST" action="{{ route('verification.send') }}" class="inline">
                         @csrf
-                        <button type="submit" class="ml-2 text-blue-500 hover:text-blue-700 text-sm">
+                        <button type="submit" class="text-[var(--cuarto)] underline hover:text-[var(--quinto)] text-sm transition-all duration-100">
                             Reenviar email de verificación
                         </button>
                     </form>
+                </div>
                 @endif
-            </p>
+            </div>
         </div>
 
         <div class="bg-[var(--sexto)] p-4 rounded-lg shadow-sm">
@@ -55,7 +65,7 @@
         <hr class="border-[var(--tercero)] mb-2 mt-1 border-t-4 rounded">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-            <a href="#" class="hover:scale-105 flex flex-col items-center p-4 bg-[var(--tercero)] rounded-lg shadow hover:bg-[var(--tercero-oscuro)] transition duration-300">
+            <a href="{{route ('profile.orders')}}" class="hover:scale-105 flex flex-col items-center p-4 bg-[var(--tercero)] rounded-lg shadow hover:bg-[var(--tercero-oscuro)] transition duration-300">
                 <div class="w-10 h-10 bg-[var(--segundo)] rounded-full flex items-center justify-center mb-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[var(--tercero)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
