@@ -8,19 +8,12 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProfileController extends Controller
 {
-    /**
-     * Muestra el perfil del usuario.
-     */
     public function show(Request $request)
     {
         return view('my-profile.show', [
             'user' => $request->user(),
         ]);
     }
-
-    /**
-     * Muestra el formulario de edición del perfil del usuario.
-     */
     public function edit(Request $request)
     {
         return view('my-profile.edit', [

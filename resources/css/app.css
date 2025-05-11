@@ -138,3 +138,11 @@ body {
 .border-danger {
     border: 2px solid rgb(227, 70, 70);
 }
+
+#cart-counter {
+    font-size: 0.75rem;
+    line-height: 1;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    display: none;
+}

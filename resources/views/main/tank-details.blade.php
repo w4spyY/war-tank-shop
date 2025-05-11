@@ -32,7 +32,12 @@
         
             <div>
                 <p class="text-xl md:text-2xl font-bold card-h1 mt-6"><span class="font-semibold">Precio:</span> € <span class="underline"> {{ number_format($tank->price, 2) }}</span></p>
-                <button class="w-full mt-6 py-3 card-btn rounded-lg text-lg md:text-xl font-bold hover:bg-primero transition-colors duration-300">
+                <button class="btn-add-to-cart" 
+                        data-product-id="{{ $tank->id }}" 
+                        data-product-type="tank" 
+                        data-product-name="{{ $tank->name }}" 
+                        data-product-price="{{ $tank->price }}" 
+                        data-product-image="{{ asset('storage/'.$tank->image_url) }}">
                     Añadir al carrito
                 </button>
             </div>
@@ -86,5 +91,7 @@
         </div>
     </div>
 </div>
+
+@vite(['resources/js/carrito.js'])
 
 @endsection

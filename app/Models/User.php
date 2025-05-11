@@ -5,16 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'lastname',
@@ -29,21 +25,11 @@ class User extends Authenticatable
         'role',
     ];
 
-    /**
-     * Los atributos que deben estar ocultos al serializar.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Los atributos que deben convertirse automáticamente.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'nacimiento' => 'date',
@@ -51,11 +37,32 @@ class User extends Authenticatable
         'cookies_accepted' => 'boolean',
     ];
 
-    /**
-     * Comprobar si el usuario es admin.
-     */
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    // Relación con carritos
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    // Relación con facturas
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    // Relación con consultas de productos
+    public function productInquiries()
+    {
+        return $this->hasMany(ProductInquiry::class);
+    }
+
+    // Relación con valoraciones
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
     }
 }

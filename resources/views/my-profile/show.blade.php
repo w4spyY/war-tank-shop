@@ -22,6 +22,20 @@
             <p class="mt-2 text-[var(--tercero)]"><strong>Fecha de Nacimiento:</strong> {{ $user->nacimiento ? $user->nacimiento->format('d/m/Y') : 'No disponible' }}</p>
             <p class="mt-2 text-[var(--tercero)]"><strong>Email:</strong> {{ $user->email }}</p>
             <p class="mt-2 text-[var(--tercero)]"><strong>Teléfono:</strong> {{ $user->telefono ?? 'No disponible' }}</p>
+            <p class="mt-2 text-[var(--tercero)]">
+                <strong>Email verificado:</strong> 
+                @if($user->hasVerifiedEmail())
+                    <span class="text-green-500">Sí</span>
+                @else
+                    <span class="text-red-500">No</span>
+                    <form method="POST" action="{{ route('verification.send') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="ml-2 text-blue-500 hover:text-blue-700 text-sm">
+                            Reenviar email de verificación
+                        </button>
+                    </form>
+                @endif
+            </p>
         </div>
 
         <div class="bg-[var(--sexto)] p-4 rounded-lg shadow-sm">

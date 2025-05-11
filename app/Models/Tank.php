@@ -12,8 +12,9 @@ class Tank extends Model
     protected $table = 'tanks';
 
     protected $fillable = [
-        'id',
+        'code',
         'image_url',
+        'category_id',
         'name',
         'description',
         'weight_kg',
@@ -28,8 +29,8 @@ class Tank extends Model
         'range_km',
         'manufacture_year',
         'country',
-        'category',
         'stock',
+        'sells'
     ];
 
     protected $casts = [
@@ -38,21 +39,40 @@ class Tank extends Model
         'max_speed_kmh' => 'decimal:2',
         'price' => 'decimal:2',
         'stock' => 'integer',
+        'sells' => 'integer',
         'crew_capacity' => 'integer',
         'fuel_capacity_liters' => 'integer',
         'horsepower' => 'integer',
         'range_km' => 'integer',
     ];
 
-    // Relación con las reseñas (un tanque tiene muchas reseñas)
-    public function reviews()
+    // Relación con categoría
+    public function category()
     {
-        return $this->hasMany(ProductReview::class, 'product_id');
+        return $this->belongsTo(Category::class);
     }
 
-    // Relación con las consultas (un tanque puede tener muchas consultas)
+    // Relación con las reseñas
+    public function ratings()
+    {
+        return $this->morphMany(Rating::class, 'product', 'product_type', 'product_id');
+    }
+
+    // Relación con las consultas
     public function inquiries()
     {
-        return $this->hasMany(ProductInquiry::class, 'product_reference', 'id');
+        return $this->morphMany(ProductInquiry::class, 'product', 'product_type', 'product_code', 'code');
     }
-}    
+
+    // Relación con items de carrito
+    public function cartItems()
+    {
+        return $this->morphMany(CartItem::class, 'product', 'product_type', 'product_id');
+    }
+
+    // Relación con items de factura
+    public function invoiceItems()
+    {
+        return $this->morphMany(InvoiceItem::class, 'product', 'product_type', 'product_id');
+    }
+}

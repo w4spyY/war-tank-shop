@@ -14,9 +14,9 @@ class AdminUserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Admin',
             'lastname' => 'Principal',
-            'nacimiento' => '2000-01-01', // Fecha de nacimiento
+            'nacimiento' => '2000-01-01',
             'email' => 'admin@example.com',
-            'password' => Hash::make('admin'), // Contraseña segura
+            'password' => Hash::make('admin'),
             'direccion' => 'Calle Admin 123, Ciudad',
             'facturacion' => 'Calle Admin 123, Ciudad',
             'telefono' => '+34666555444',

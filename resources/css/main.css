@@ -20,6 +20,20 @@ button:hover {
     --mucho: #7ae260;
     --poco: #e2c160;
     --agotado: #e27a60;
+
+    --nav-link: #181c14;
+    --details-btn: #3c3d37; 
+}
+
+[data-theme="dark"] {
+    --primero: #ecdfcc;
+    --segundo: #3c3d37;
+    --tercero: #3c3d37;
+    --tercero-oscuro: #4a5247;
+    --sexto: #ecdfcc;
+
+    --nav-link: #c0ad91;
+    --details-btn: #3c3d37; 
 }
 
 body {
@@ -32,7 +46,7 @@ body {
 }
 
 .header-link:hover {
-    background-color: var(--sexto);
+    background-color: var(--nav-link);
 }
 
 .card-bg {
@@ -52,7 +66,7 @@ body {
 
 .card-btn {
     background-color: var(--cuarto);
-    color: var(--primero);
+    color: var(--details-btn);
     transition: background-color 0.3s ease;
 }
 
@@ -187,4 +201,12 @@ body {
 
 .bg-sexto {
     background-color: var(--sexto);
+}
+
+#cart-counter {
+    font-size: 0.75rem;
+    line-height: 1;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    display: none;
 }
