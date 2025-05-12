@@ -1,54 +1,104 @@
 function getCart() {
-    const cart = localStorage.getItem('cart');
-    return cart ? JSON.parse(cart) : { items: [], total: 0 };
+    let cartData = localStorage.getItem('cart');
+    
+    if (cartData === null) {
+        return {
+            items: [],
+            total: 0
+        };
+    } else {
+        try {
+            return JSON.parse(cartData);
+        } catch (e) {
+            console.log("pepepe")
+            return {
+                items: [],
+                total: 0
+            };
+        }
+    }
 }
 
 function saveCart(cart) {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    let cartString = JSON.stringify(cart);
+    localStorage.setItem('cart', cartString);
 }
 
 function updateCartTotal(cart) {
-    cart.total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    let newTotal = 0;
+    for (let i = 0; i < cart.items.length; i++) {
+        let item = cart.items[i];
+        newTotal += item.price * item.quantity;
+    }
+    cart.total = newTotal;
 }
 
 function addToCart(product) {
-    const cart = getCart();
-    const existingItem = cart.items.find(item => item.id === product.id && item.type === product.type);
-
-    if (existingItem) {
-        existingItem.quantity++;
-        existingItem.total = existingItem.price * existingItem.quantity;
-    } else {
+    let cart = getCart();
+    let found = false;
+    
+    //si el proudcto esta en carrito
+    for (let i = 0; i < cart.items.length; i++) {
+        let item = cart.items[i];
+        if (item.id === product.id && item.type === product.type) {
+            item.quantity++;
+            item.total = item.price * item.quantity;
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
         cart.items.push({
             id: product.id,
             name: product.name,
             price: product.price,
             image: product.image,
-            type: product.type, //tank o part
+            type: product.type,
             quantity: 1,
             total: product.price
         });
     }
-
+    
     updateCartTotal(cart);
     saveCart(cart);
 }
 
 function removeFromCart(id, type) {
-    const cart = getCart();
-    cart.items = cart.items.filter(item => !(item.id === id && item.type === type));
+    let cart = getCart();
+    let newItems = [];
+
+    for (let i = 0; i < cart.items.length; i++) {
+        let item = cart.items[i];
+        if (!(item.id === id && item.type === type)) {
+            newItems.push(item);
+        }
+    }
+    cart.items = newItems;
+    
     updateCartTotal(cart);
     saveCart(cart);
     renderCart();
 }
 
 function changeQuantity(id, type, newQuantity) {
-    const cart = getCart();
-    const item = cart.items.find(i => i.id === id && i.type === type);
-    if (item) {
-        item.quantity = Math.max(1, parseInt(newQuantity) || 1);
-        item.total = item.quantity * item.price;
+    let cart = getCart();
+
+    for (let i = 0; i < cart.items.length; i++) {
+        let item = cart.items[i];
+
+        if (item.id === id && item.type === type) {
+            let quantity = parseInt(newQuantity);
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1;
+            }
+            item.quantity = quantity;
+
+            item.total = item.quantity * item.price;
+            break;
+        }
     }
+    
     updateCartTotal(cart);
     saveCart(cart);
     renderCart();
