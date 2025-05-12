@@ -112,5 +112,78 @@
             </a>
         </div>
     </div>
+
+    <div class="bg-[var(--sexto)] rounded-lg shadow-md p-6 mb-8 border border-[var(--tercero)]">
+        <h2 class="text-xl font-semibold text-[var(--tercero)] mb-4">Gestión de Usuarios</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a href="{{ route('admin.users.list') }}" class="flex items-center p-4 bg-[var(--tercero)] hover:bg-[var(--tercero-oscuro)] text-[var(--sexto)] rounded-lg transition-colors duration-300">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span>Listado de Usuarios</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-[var(--sexto)] rounded-lg shadow-md p-6 border border-[var(--tercero)]">
+        <h2 class="text-xl font-semibold text-[var(--tercero)] mb-4">Crear Nueva Categoría</h2>
+        <form id="createCategoryForm" class="space-y-4">
+            @csrf
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-[var(--tercero)]">Nombre</label>
+                    <input type="text" id="name" name="name" required 
+                           class="mt-1 block w-full rounded-md border border-[var(--tercero)] bg-white p-2 shadow-sm">
+                </div>
+                <div>
+                    <label for="type" class="block text-sm font-medium text-[var(--tercero)]">Tipo</label>
+                    <select id="type" name="type" required 
+                            class="mt-1 block w-full rounded-md border border-[var(--tercero)] bg-white p-2 shadow-sm">
+                        <option value="tank">Tanque</option>
+                        <option value="part">Pieza</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-[var(--tercero)]">Descripción</label>
+                <textarea id="description" name="description" rows="3" 
+                          class="mt-1 block w-full rounded-md border border-[var(--tercero)] bg-white p-2 shadow-sm"></textarea>
+            </div>
+            <button type="submit" 
+                    class="px-4 py-2 bg-[var(--tercero)] text-[var(--sexto)] rounded-md hover:bg-[var(--tercero-oscuro)] transition-colors duration-300">
+                Crear Categoría
+            </button>
+        </form>
+    </div>
 </div>
+
+<script>
+    document.getElementById('createCategoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        fetch('/admin/categories', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.reset();
+                showAlert('success', 'Categoría creada correctamente');
+            } else {
+                showAlert('error', data.message || 'Error al crear la categoría');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'Error al crear la categoría');
+        });
+    });
+</script>
 @endsection

@@ -26,9 +26,6 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
                             Stock
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--sexto)] uppercase tracking-wider">
-                            Acciones
-                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-[var(--sexto)] divide-y divide-[var(--tercero)]">
@@ -49,10 +46,6 @@
                                    ($tank->stock > 0 ? 'bg-[var(--poco)] text-[var(--sexto)]' : 'bg-[var(--agotado)] text-[var(--sexto)]') }}">
                                 {{ $tank->stock }} unidades
                             </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="#" class="text-[var(--cuarto)] hover:text-[var(--quinto)] mr-3">Editar</a>
-                            <a href="#" class="text-[var(--quinto)] hover:text-red-700">Eliminar</a>
                         </td>
                     </tr>
                     @endforeach

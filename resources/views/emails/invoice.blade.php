@@ -12,6 +12,5 @@ Adjunto encontrarás tu factura #{{ $invoice->invoice_number }} de {{ config('ap
 Ver factura en línea
 @endcomponent
 
-Gracias por tu compra,  
-El equipo de {{ config('app.name') }}
+Gracias por tu compra.
 @endcomponent

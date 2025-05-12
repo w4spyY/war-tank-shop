@@ -4,9 +4,6 @@
 <div class="ms-10 me-10 mx-auto mt-10 mb-10 p-6 bg-[var(--primero)] rounded-xl shadow-lg border border-[var(--tercero)]">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-[var(--tercero)]">Crear Nuevo Producto</h1>
-        <a href="{{ route('admin.catalog.products') }}" class="bg-[var(--sexto)] rounded-lg shadow-md px-4 py-2 border border-[var(--tercero)] hover:bg-[var(--quinto)] transition-colors">
-            <span class="text-sm font-semibold text-[var(--tercero)]">Volver al listado</span>
-        </a>
     </div>
 
     <div class="bg-[var(--sexto)] rounded-lg shadow-md p-6 border border-[var(--tercero)]">

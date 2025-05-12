@@ -8,11 +8,6 @@
             <a href="{{ route('admin.catalog.products.create') }}" class="bg-[var(--cuarto)] text-[var(--sexto)] rounded-lg shadow-md px-4 py-2 hover:bg-[var(--quinto)] transition-colors">
                 <span class="text-sm font-semibold">Añadir Producto</span>
             </a>
-            <div class="bg-[var(--sexto)] rounded-lg shadow-md px-4 py-2 border border-[var(--tercero)]">
-                <span class="text-sm font-semibold text-[var(--tercero)]">
-                    Tanques: {{ $tanks->total() }} | Piezas: {{ $parts->total() }}
-                </span>
-            </div>
         </div>
     </div>
 
@@ -358,37 +353,47 @@
     }
 
     function deleteProduct(type, id) {
-        if (!confirm('¿Estás seguro?')) {
+        if (!confirm(`¿Estás seguro de eliminar este ${type === 'tank' ? 'tanque' : 'pieza'}?`)) {
             return;
         }
 
-        const url = type === 'tank' 
+        const formData = {
+            _token: document.querySelector('input[name="_token"]').value,
+            _method: 'DELETE'
+        };
+
+        const endpoint = type === 'tank' 
             ? `/admin/catalog/tanks/${id}` 
             : `/admin/catalog/parts/${id}`;
 
-        fetch(url, {
+        fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'X-CSRF-TOKEN': formData._token,
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({
-                _token: document.querySelector('input[name="_token"]').value,
-                _method: 'DELETE'
-            })
+            body: JSON.stringify(formData)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                //alert("PEPEPE");
+                // Mensaje más descriptivo según el tipo de producto
+                const productType = type === 'tank' ? 'Tanque' : 'Pieza';
+                alert(`${productType} eliminado correctamente`);
                 window.location.reload();
             } else {
-                console.log(data.message);
+                throw new Error(data.message || 'No se pudo eliminar el producto');
             }
         })
         .catch(error => {
-            console.log('Error:', error);
+            console.error('Error:', error);
+            alert(`Error al eliminar: ${error.message}`);
         });
     }
 </script>

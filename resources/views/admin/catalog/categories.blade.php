@@ -36,7 +36,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                {{ $category->type === 'tank' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                {{ $category->type === 'tank' ? 'bg-[var(--pagado)] text-[var(--sexto)]' : 'bg-[var(--pendiente)] text-[var(--sexto)]' }}">
                                 {{ $category->type === 'tank' ? 'Tanque' : 'Pieza' }}
                             </span>
                         </td>
@@ -112,18 +112,24 @@
         document.getElementById('editModal').classList.add('hidden');
     }
 
-    function updateCategory() {
+    function updateUser() {
         const formData = {
-            id: document.getElementById('editCategoryId').value,
-            name: document.getElementById('editName').value,
-            type: document.getElementById('editType').value,
-            //subtype: document.getElementById('subtypeType').value,
-            description: document.getElementById('editDescription').value,
+            id: document.getElementById('editUserId').value,
+            name: document.getElementById('editUserName').value,
+            lastname: document.getElementById('editUserLastname').value,
+            email: document.getElementById('editUserEmail').value,
+            role: document.getElementById('editUserRole').value,
             _token: document.querySelector('input[name="_token"]').value,
             _method: 'PUT'
         };
 
-        fetch(`/admin/catalog/categories/${formData.id}`, {
+        // Validación básica
+        if (!formData.name || !formData.lastname || !formData.email) {
+            alert('Por favor, complete todos los campos obligatorios.');
+            return;
+        }
+
+        fetch(`/admin/users/${formData.id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,45 +141,48 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                closeEditModal();
+                closeEditUserModal();
                 window.location.reload();
             } else {
-                console.log("error");
-                //console.log(data.message)
+                alert(data.message || 'Error al actualizar el usuario');
             }
         })
         .catch(error => {
-            console.log('Error:', error);
+            console.error('Error:', error);
+            alert('Error al actualizar el usuario');
         });
     }
 
     function deleteCategory(id) {
-        if (!confirm('¿Estás seguro?')) {
+        if (!confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
             return;
         }
+
+        const formData = {
+            _token: document.querySelector('input[name="_token"]').value,
+            _method: 'DELETE'
+        };
 
         fetch(`/admin/catalog/categories/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'X-CSRF-TOKEN': formData._token,
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({
-                _token: document.querySelector('input[name="_token"]').value,
-                _method: 'DELETE'
-            })
+            body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                window.location.reload(); // Recarga la página para actualizar la lista
             } else {
-                //console.log(data.message)
+                alert(data.message || 'No se pudo eliminar la categoría');
             }
         })
         .catch(error => {
-            console.log('Error:', error);
+            console.error('Error:', error);
+            alert('Error al eliminar la categoría');
         });
     }
 </script>

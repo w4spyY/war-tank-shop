@@ -2,11 +2,6 @@
 
 @section('content')
 <div class="ms-10 me-10 mx-auto mt-10 mb-10 p-6 bg-[var(--primero)] rounded-xl shadow-lg border border-[var(--tercero)]">
-    @if(session('status'))
-        <div class="mb-4 text-green-500 text-center">
-            {{ session('status') }}
-        </div>
-    @endif
 
     <div class="text-center mb-8">
         <h2 class="text-3xl font-bold text-[var(--tercero)]">{{ $user->name }} {{ $user->lastname }}</h2>

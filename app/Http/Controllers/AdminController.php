@@ -12,6 +12,7 @@ use App\Models\TankPart;
 use App\Models\CartItem;
 use App\Models\InvoiceItem;
 use App\Models\Invoice;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -348,5 +349,60 @@ class AdminController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function userList()
+    {
+        $users = User::where('role', '!=', 'admin')->get();
+        return view('admin.users.list', compact('users'));
+    }
+
+    public function editUser(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'role' => 'required|in:user,admin'
+        ]);
+        
+        $user->update($validated);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario actualizado correctamente'
+        ]);
+    }
+
+    public function deleteUser(User $user)
+    {
+        $user->delete();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario eliminado correctamente'
+        ]);
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:tank,part',
+            'description' => 'nullable|string'
+        ]);
+        
+        $category = Category::create($validated);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Categoría creada correctamente',
+            'category' => $category
+        ]);
     }
 }

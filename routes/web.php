@@ -68,6 +68,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     //grafico ventas
     Route::get('/sales-graph', [AdminController::class, 'salesGraph'])->name('admin.sales.graph');
     Route::get('/api/sales-data', [AdminController::class, 'getSalesData'])->name('admin.sales.data');
+
+    //gestor usesr
+    Route::get('/users', [AdminController::class, 'userList'])->name('admin.users.list');
+    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    
+    //gestor categorias
+    Route::post('/categories', [AdminController::class, 'storeCategory'])->name('admin.categories.store');
 });
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::prefix('catalog')->group(function () {
