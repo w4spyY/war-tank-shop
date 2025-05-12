@@ -8,6 +8,7 @@ use App\Http\Controllers\TankController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ProductInquiryController;
 
 //MAIN PAGE
 Route::get('/', [TankController::class, 'index'])->name('main.index');
@@ -101,18 +102,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 //carrito
-Route::prefix('cart')->group(function() {
+Route::middleware(['auth'])->prefix('cart')->group(function() {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/sync', [CartController::class, 'sync'])->name('cart.sync');
+    Route::post('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/confirmation', [CartController::class, 'confirmation'])->name('cart.confirmation');
 });
 
 Route::prefix('api')->group(function() {
     Route::middleware('auth:sanctum')->post('/cart/sync', [CartController::class, 'apiSync']);
 });
 
-Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::post('/checkout', [CartController::class, 'processCheckout'])->name('cart.processCheckout');
-Route::get('/checkout/confirmation/{invoice}', [CartController::class, 'confirmation'])->name('cart.confirmation');
+Route::prefix('product-inquiries')->group(function() {
+    Route::post('/', [ProductInquiryController::class, 'store'])->name('product.inquiries.store');
+});
+Route::get('/product-inquiry', function () {
+    return view('product-inquiry');
+})->name('product.inquiry.form');
 
 //para ver pedidos
 Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');

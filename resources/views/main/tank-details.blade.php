@@ -18,6 +18,7 @@
         <div class="w-full lg:w-[30%] flex-grow p-6 card-bg rounded-lg shadow-lg flex flex-col justify-between">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold card-h1 mb-4">{{ $tank->name }}</h1>
+                <p class="text-[var(--tercero-oscuro)] text-xs mb-3">Codigo: {{ $tank->code }}</p>
                 <p class="text-base md:text-lg card-h1 rounded mb-4">{{ $tank->description }}</p>
                 
                 <div class="space-y-3">
@@ -32,7 +33,7 @@
         
             <div>
                 <p class="text-xl md:text-2xl font-bold card-h1 mt-6"><span class="font-semibold">Precio:</span> € <span class="underline"> {{ number_format($tank->price, 2) }}</span></p>
-                <button class="btn-add-to-cart" 
+                <button class="btn-add-to-cart bg-[var(--cuarto)] p-3 mt-2 text-[var(--sexto)] font-bold rounded-lg hover:bg-[var(--quinto)] hover:scale-110 transition-all duration-100" 
                         data-product-id="{{ $tank->id }}" 
                         data-product-type="tank" 
                         data-product-name="{{ $tank->name }}" 
@@ -92,6 +93,6 @@
     </div>
 </div>
 
-@vite(['resources/js/carrito.js'])
+@vite(['resources/js/cart.js'])
 
 @endsection

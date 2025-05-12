@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Payment;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
-use App\Models\Payment;
 use App\Models\Tank;
 use App\Models\TankPart;
 
@@ -21,232 +21,98 @@ class CartController extends Controller
         return view('cart.index');
     }
 
-    public function sync(Request $request)
+    public function checkout(Request $request)
     {
         try {
-            if (!Auth::check()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Debes iniciar sesión primero'
-                ], 401);
-            }
+            $request->validate([
+                'cart' => 'required|array',
+                'cart.*.id' => 'required',
+                'cart.*.type' => 'required|in:tank,part',
+                'cart.*.quantity' => 'required|integer|min:1',
+                'cart.*.price' => 'required|numeric|min:0'
+            ]);
 
-            $cartData = $request->input('cart_data');
-            
-            if (is_array($cartData)) {
-                $localCart = $cartData;
-            } else if (is_string($cartData)) {
-                $localCart = json_decode($cartData, true);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    throw new \Exception('Formato JSON inválido en cart_data');
+            $user = Auth::user();
+            $cart = $request->cart;
+
+            // Calcular totales
+            $subtotal = collect($cart)->sum(function($item) {
+                return $item['price'] * $item['quantity'];
+            });
+
+            $tax = $subtotal * 0.21; // IVA del 21%
+            $total = $subtotal + $tax;
+
+            // Crear la factura
+            $invoice = Invoice::create([
+                'user_id' => $user->id,
+                'invoice_number' => 'INV-' . Str::upper(Str::random(8)),
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'total' => $total,
+                'status' => 'paid', // Como es simulado, marcamos como pagado directamente
+                'payment_method' => 'simulated',
+                'billing_name' => $user->name . ' ' . $user->lastname,
+                'billing_address' => $user->direccion,
+                'billing_tax_id' => '', // Puedes añadir este campo a users si es necesario
+            ]);
+
+            // Crear los items de la factura y actualizar stocks/ventas
+            foreach ($cart as $item) {
+                $product = $item['type'] === 'tank' 
+                    ? Tank::find($item['id'])
+                    : TankPart::find($item['id']);
+
+                if (!$product) {
+                    continue; // O manejar el error como prefieras
                 }
-            } else {
-                throw new \Exception('Tipo de dato inválido para cart_data');
-            }
 
-            if (!isset($localCart['items']) || !is_array($localCart['items'])) {
-                throw new \Exception('Estructura del carrito inválida');
-            }
+                // Crear invoice item
+                InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'product_type' => $item['type'],
+                    'product_id' => $item['id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'total_price' => $item['price'] * $item['quantity'],
+                    'name' => $product->name,
+                    'tax_rate' => 21, // 21% IVA
+                ]);
 
-            $cart = $this->syncCartWithDatabase(Auth::user(), $localCart);
+                // Actualizar stock y ventas
+                $product->decrement('stock', $item['quantity']);
+                $product->increment('sells', $item['quantity']);
+            }
 
             return response()->json([
                 'success' => true,
-                'cart_id' => $cart->id,
-                'item_count' => $cart->items->count()
+                'invoice_id' => $invoice->id,
+                'message' => 'Compra realizada con éxito'
             ]);
-
-        } catch (\Exception $e) {
-            Log::error('Error en sync cart: ' . $e->getMessage());
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al sincronizar carrito: ' . $e->getMessage()
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
             ], 500);
         }
     }
 
-    private function syncCartWithDatabase($user, $localCart)
+    public function confirmation(Request $request)
     {
-        return DB::transaction(function () use ($user, $localCart) {
-            $cart = Cart::firstOrCreate(
-                ['user_id' => $user->id, 'status' => 'activo'],
-                ['created_at' => now(), 'updated_at' => now()]
-            );
+        $invoiceId = $request->query('invoice');
+        $invoice = Invoice::with('items')->findOrFail($invoiceId);
 
-            $productIdsInRequest = [];
-
-            foreach ($localCart['items'] as $item) {
-                if (!isset($item['id'], $item['type'], $item['quantity'], $item['price'])) {
-                    Log::warning('Item del carrito inválido', ['item' => $item]);
-                    continue;
-                }
-
-                if (!in_array($item['type'], ['tank', 'part'])) {
-                    continue;
-                }
-
-                $productIdsInRequest[] = $item['id'];
-
-                CartItem::updateOrCreate(
-                    [
-                        'cart_id' => $cart->id,
-                        'product_id' => $item['id'],
-                        'product_type' => $item['type']
-                    ],
-                    [
-                        'quantity' => $item['quantity'],
-                        'price' => $item['price'],
-                        'updated_at' => now()
-                    ]
-                );
-            }
-
-            CartItem::where('cart_id', $cart->id)
-                ->whereNotIn('product_id', $productIdsInRequest)
-                ->delete();
-
-            $total = $cart->items()->sum(DB::raw('price * quantity'));
-            $cart->update(['total' => $total]);
-
-            return $cart;
-        });
-    }
-
-    public function checkout()
-    {
-        $user = Auth::user();
-
-        $cart = Cart::with(['items' => function($query) {
-            $query->with(['product' => function($q) {
-                $q->select('id', 'name');
-            }]);
-        }])
-        ->where('user_id', $user->id)
-        ->where('status', 'activo')
-        ->first();
-
-        if (!$cart) {
-            $cart = Cart::create([
-                'user_id' => $user->id,
-                'status' => 'activo',
-            ]);
-        }
-
-        if ($cart->items->isEmpty()) {
-            return redirect()->route('cart.index')->withErrors('No tienes productos en el carrito.');
-        }
-
-        return view('cart.checkout', compact('cart'));
-    }
-
-    public function processCheckout(Request $request)
-    {
-        $user = Auth::user();
-
-        return DB::transaction(function () use ($user, $request) {
-            $cart = Cart::with('items')
-                ->where('user_id', $user->id)
-                ->where('status', 'activo')
-                ->lockForUpdate()
-                ->first();
-
-            if (!$cart || $cart->items->isEmpty()) {
-                return redirect()->route('cart.index')->withErrors('No tienes productos en el carrito.');
-            }
-
-            $validated = $request->validate([
-                'billing_name' => 'required|string|max:255',
-                'billing_address' => 'required|string|max:255',
-                'billing_phone' => 'required|string|max:20',
-                'credit_card' => 'required|string|min:13|max:19',
-            ]);
-
-            $subtotal = 0;
-            $taxRate = 0.21;
-
-            foreach ($cart->items as $item) {
-                $subtotal += $item->price * $item->quantity;
-            }
-
-            $tax = $subtotal * $taxRate;
-            $total = $subtotal + $tax;
-
-            $invoice = Invoice::create([
-                'user_id' => $user->id,
-                'billing_name' => $validated['billing_name'],
-                'billing_address' => $validated['billing_address'],
-                'billing_phone' => $validated['billing_phone'],
-                'subtotal' => $subtotal,
-                'tax' => $tax,
-                'total' => $total,
-                'status' => 'pending',
-                'payment_method' => 'credit_card',
-            ]);
-
-            foreach ($cart->items as $item) {
-                $productType = $item->product_type === 'tank' 
-                    ? 'App\Models\Tank' 
-                    : 'App\Models\TankPart';
-
-                InvoiceItem::create([
-                    'invoice_id' => $invoice->id,
-                    'product_id' => $item->product_id,
-                    'product_type' => $productType,
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->price,
-                    'total_price' => $item->price * $item->quantity,
-                    'name' => $this->getProductName($item),
-                    'tax_rate' => $taxRate,
-                ]);
-
-                $this->updateProductStock($item);
-            }
-
-            Payment::create([
-                'invoice_id' => $invoice->id,
-                'amount' => $total,
-                'payment_method' => 'credit_card',
-                'transaction_id' => 'txn_' . uniqid(),
-                'status' => 'completed',
-                'paid_at' => now(),
-            ]);
-
-            $cart->status = 'completed';
-            $cart->save();
-
-            return redirect()->route('cart.confirmation', ['invoice' => $invoice->id]);
-        });
-    }
-
-    public function confirmation(Invoice $invoice)
-    {
+        // Verificar que la factura pertenece al usuario autenticado
         if ($invoice->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $invoice->load('items');
         return view('cart.confirmation', compact('invoice'));
-    }
-
-    private function getProductName($cartItem)
-    {
-        $product = $cartItem->product_type === 'tank' 
-            ? Tank::find($cartItem->product_id)
-            : TankPart::find($cartItem->product_id);
-        
-        return $product ? $product->name : 'Producto eliminado';
-    }
-
-    private function updateProductStock($cartItem)
-    {
-        $product = $cartItem->product_type === 'tank'
-            ? Tank::find($cartItem->product_id)
-            : TankPart::find($cartItem->product_id);
-
-        if ($product) {
-            $product->stock -= $cartItem->quantity;
-            $product->sells += $cartItem->quantity;
-            $product->save();
-        }
     }
 }
