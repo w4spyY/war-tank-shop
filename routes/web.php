@@ -61,6 +61,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/products/exhausted', [AdminController::class, 'exhaustedProducts'])->name('admin.products.exhausted');
 
     Route::get('/sales-history', [AdminController::class, 'salesHistory'])->name('admin.sales.history');
+    Route::put('/invoices/{invoice}/status', [AdminController::class, 'updateInvoiceStatus'])->name('admin.invoices.update-status');
+    Route::delete('/invoices/{invoice}', [AdminController::class, 'deleteInvoice'])->name('admin.invoices.delete');
     
     //grafico stock
     Route::get('/stock-graph', [AdminController::class, 'stockGraph'])->name('admin.stock.graph');

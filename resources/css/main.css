@@ -72,7 +72,6 @@ body {
 .card-btn {
     background-color: var(--cuarto);
     color: var(--details-btn);
-    transition: background-color 0.3s ease;
 }
 
 .card-btn:hover {

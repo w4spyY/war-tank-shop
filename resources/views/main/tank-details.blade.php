@@ -8,9 +8,9 @@
         <div class="w-full lg:w-[70%] flex">
             <div class="w-full overflow-hidden flex">
                 <img 
-                    src="{{ asset('storage/'.$tank->image_url) }}" 
+                    src="{{ asset($tank->image_url) }}" 
                     alt="{{ $tank->name }}" 
-                    class="w-full h-auto lg:h-full object-cover rounded-xl"
+                    class="w-full h-auto lg:h-full object-cover rounded-xl border-2 border-[var(--sexto)]"
                 >
             </div>
         </div>

@@ -6,7 +6,7 @@
         @foreach ($tanks as $tank)
             <div class="box p-5 card-bg rounded-lg">
                 <div class="relative overflow-hidden rounded-lg">
-                    <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$tank->image_url) }}" alt="{{ $tank->name }}">
+                    <img class="w-full h-48 object-cover" src="{{ asset($tank->image_url) }}" alt="{{ $tank->name }}">
                     <img 
                         src="{{ asset('oferta/oferta.png') }}" 
                         alt="Oferta" 
@@ -18,7 +18,7 @@
                 </div>
                 <div class="flex justify-between mt-2 p-2 card-desc rounded-lg">
                     <p class="text-lg ms-5 content-center">Solo por <span class="font-bold">{{ number_format($tank->price, 2, ',', '.') }}</span> <span class="font-bold">€</span></p>
-                    <a class="text-lg font-bold me-5 card-btn p-2 rounded-lg transition-all duration-300 hover:scale-110 border border-[var(--primero)]" href="{{ route('tank.details', $tank->id) }}">VER DETALLES</a>
+                    <a class="text-lg font-bold me-5 card-btn p-2 rounded-lg transition-all duration-100 hover:scale-110 border border-[var(--primero)]" href="{{ route('tank.details', $tank->id) }}">VER DETALLES</a>
                 </div>
             </div>
         @endforeach
@@ -33,14 +33,14 @@
         @foreach ($tanks as $tank)
             <div class="box p-5 card-bg rounded-lg">
                 <div class="overflow-hidden rounded-lg">
-                    <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$tank->image_url) }}" alt="{{ $tank->name }}">
+                    <img class="w-full h-48 object-cover" src="{{ asset($tank->image_url) }}" alt="{{ $tank->name }}">
                 </div>
                 <div class="text-center card-h1 text-2xl font-bold mt-1">
                     <p>{{ $tank->name }}</p>
                 </div>
                 <div class="flex justify-between mt-2 p-2 card-desc rounded-lg">
                     <p class="text-lg ms-5 content-center">Solo por <span class="font-bold">{{ number_format($tank->price, 2, ',', '.') }}</span> <span class="font-bold">€</span></p>
-                    <a class="text-lg font-bold me-5 card-btn p-2 rounded-lg transition-all duration-300 hover:scale-110 border border-[var(--primero)]" href="{{ route('tank.details', $tank->id) }}">VER DETALLES</a>
+                    <a class="text-lg font-bold me-5 card-btn p-2 rounded-lg transition-all duration-100 hover:scale-110 border border-[var(--primero)]" href="{{ route('tank.details', $tank->id) }}">VER DETALLES</a>
                 </div>
             </div>
         @endforeach
@@ -55,14 +55,14 @@
         @foreach ($tanks as $tank)
             <div class="box p-5 card-bg rounded-lg">
                 <div class="overflow-hidden rounded-lg">
-                    <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$tank->image_url) }}" alt="{{ $tank->name }}">
+                    <img class="w-full h-48 object-cover" src="{{ asset($tank->image_url) }}" alt="{{ $tank->name }}">
                 </div>
                 <div class="text-center card-h1 text-2xl font-bold mt-1">
                     <p>{{ $tank->name }}</p>
                 </div>
                 <div class="flex justify-between mt-2 p-2 card-desc rounded-lg">
                     <p class="text-lg ms-5 content-center">Solo por <span class="font-bold">{{ number_format($tank->price, 2, ',', '.') }}</span> <span class="font-bold">€</span></p>
-                    <a class="text-lg font-bold me-5 card-btn p-2 rounded-lg transition-all duration-300 hover:scale-110 border border-[var(--primero)]" href="{{ route('tank.details', $tank->id) }}">VER DETALLES</a>
+                    <a class="text-lg font-bold me-5 card-btn p-2 rounded-lg transition-all duration-100 hover:scale-110 border border-[var(--primero)]" href="{{ route('tank.details', $tank->id) }}">VER DETALLES</a>
                 </div>
             </div>
         @endforeach

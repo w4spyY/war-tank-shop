@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const successMessage = document.getElementById('success-message');
     const errorMessage = document.getElementById('error-message');
     const storeUrl = form.dataset.storeUrl;
+    const submitText = document.getElementById('submit-text');
+    const spinner = document.getElementById('spinner');
+    const MIN_LOADING_TIME = 1500; // 1.5 segundos mínimo de spinner visible
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -11,10 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
         successMessage.classList.add('hidden');
         errorMessage.classList.add('hidden');
         
+        // Mostrar spinner y cambiar texto
+        submitText.textContent = 'Enviando...';
+        spinner.classList.remove('hidden');
+        
         // Disable button
         const submitButton = form.querySelector('button[type="submit"]');
         submitButton.disabled = true;
-        submitButton.innerHTML = 'Enviando...';
+        
+        // Guardar el tiempo de inicio
+        const startTime = Date.now();
         
         try {
             const formData = new FormData(form);
@@ -28,25 +37,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             });
             
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
             const data = await response.json();
             
             if (response.ok) {
-                // Show success message
                 successMessage.textContent = data.message;
                 successMessage.classList.remove('hidden');
                 
-                // Reset form
                 form.reset();
             } else {
-                throw new Error(data.message || 'Error al enviar la pregunta');
+                console.log("error");
             }
         } catch (error) {
-            console.error('Error:', error);
-            errorMessage.textContent = error.message;
-            errorMessage.classList.remove('hidden');
+            console.log("error");
         } finally {
+            submitText.textContent = 'Enviar Pregunta';
+            spinner.classList.add('hidden');
             submitButton.disabled = false;
-            submitButton.innerHTML = 'Enviar Pregunta';
         }
     });
 });
