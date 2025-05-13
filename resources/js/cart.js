@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             quantity: 1
         };
 
+        console.log(product.image);
+
         // Obtener el carrito actual de localStorage
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         

@@ -353,7 +353,7 @@
     }
 
     function deleteProduct(type, id) {
-        if (!confirm(`¿Estás seguro de eliminar este ${type === 'tank' ? 'tanque' : 'pieza'}?`)) {
+        if (!confirm('¿Estás seguro?')) {
             return;
         }
 
@@ -362,9 +362,12 @@
             _method: 'DELETE'
         };
 
-        const endpoint = type === 'tank' 
-            ? `/admin/catalog/tanks/${id}` 
-            : `/admin/catalog/parts/${id}`;
+        let endpoint = '';
+        if (type === 'tank') {
+            endpoint = `/admin/catalog/tanks/${id}`;
+        } else {
+            endpoint = `/admin/catalog/parts/${id}`;
+        }
 
         fetch(endpoint, {
             method: 'POST',
@@ -377,23 +380,25 @@
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
+                throw new Error('Error');
             }
             return response.json();
         })
         .then(data => {
             if (data.success) {
-                // Mensaje más descriptivo según el tipo de producto
-                const productType = type === 'tank' ? 'Tanque' : 'Pieza';
-                alert(`${productType} eliminado correctamente`);
+                let productType;
+                if (type === 'tank') {
+                    productType = 'Tanque';
+                } else {
+                    productType = 'Pieza';
+                }
                 window.location.reload();
             } else {
-                throw new Error(data.message || 'No se pudo eliminar el producto');
+                throw new Error('Error');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert(`Error al eliminar: ${error.message}`);
+            console.log(error);
         });
     }
 </script>

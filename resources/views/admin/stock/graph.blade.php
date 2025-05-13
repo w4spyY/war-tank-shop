@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function cargarDatos() {
-        fetch("{{ route('admin.stock.data') }}")
+        fetch("/admin/api/stock-data")
             .then(response => response.json())
             .then(data => {
                 data.tanks.forEach(tank => {

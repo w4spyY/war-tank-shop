@@ -206,16 +206,15 @@
         document.getElementById('tankForm').classList.add('hidden');
     });
 
-    //formulario tanque
-    document.getElementById('createTankForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        
+    function createTank() {
+        const form = document.getElementById('createTankForm');
+        const formData = new FormData(form);
+        formData.append('_token', document.querySelector('input[name="_token"]').value);
+
         fetch('/admin/catalog/tanks', {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'X-CSRF-TOKEN': formData.get('_token'),
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: formData
@@ -223,28 +222,25 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                //console.log("CREADO VAMOOOOS");
-                window.location.href = data.redirect;
+                window.location.reload();
             } else {
-                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                //console.log(data.message);
+                console.log("error");
             }
         })
         .catch(error => {
-            console.log('Error:', error);
+            console.log(error);
         });
-    });
+    }
 
-    //formulario pieza
-    document.getElementById('createPartForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        
+    function createPart() {
+        const form = document.getElementById('createPartForm');
+        const formData = new FormData(form);
+        formData.append('_token', document.querySelector('input[name="_token"]').value);
+
         fetch('/admin/catalog/parts', {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'X-CSRF-TOKEN': formData.get('_token'),
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: formData
@@ -252,14 +248,25 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = data.redirect;
+                window.location.reload();
             } else {
-                console.log(data.message);
+                console.log("error");
             }
         })
         .catch(error => {
-            console.log('Error:', error);
+            console.error('Error:', error);
+            alert('Error al crear la pieza');
         });
+    }
+
+    document.getElementById('createTankForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        createTank();
+    });
+
+    document.getElementById('createPartForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        createPart();
     });
 </script>
 @endsection

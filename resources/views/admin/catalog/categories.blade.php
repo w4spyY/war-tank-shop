@@ -123,12 +123,6 @@
             _method: 'PUT'
         };
 
-        // Validación básica
-        if (!formData.name || !formData.lastname || !formData.email) {
-            alert('Por favor, complete todos los campos obligatorios.');
-            return;
-        }
-
         fetch(`/admin/users/${formData.id}`, {
             method: 'POST',
             headers: {
@@ -144,17 +138,16 @@
                 closeEditUserModal();
                 window.location.reload();
             } else {
-                alert(data.message || 'Error al actualizar el usuario');
+                console.log("error");
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error al actualizar el usuario');
+            console.log(error);
         });
     }
 
     function deleteCategory(id) {
-        if (!confirm('¿Estás seguro de que deseas eliminar esta categoría?')) {
+        if (!confirm('¿Estás seguro?')) {
             return;
         }
 
@@ -175,14 +168,13 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload(); // Recarga la página para actualizar la lista
+                window.location.reload();
             } else {
-                alert(data.message || 'No se pudo eliminar la categoría');
+                console.log("error");
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error al eliminar la categoría');
+            console.log(error);
         });
     }
 </script>

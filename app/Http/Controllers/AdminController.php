@@ -353,7 +353,9 @@ class AdminController extends Controller
 
     public function userList()
     {
-        $users = User::where('role', '!=', 'admin')->get();
+        $currentUserId = auth()->id();
+        $users = User::where('id', '!=', $currentUserId)->get();
+        
         return view('admin.users.list', compact('users'));
     }
 

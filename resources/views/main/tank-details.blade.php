@@ -38,7 +38,7 @@
                         data-product-type="tank" 
                         data-product-name="{{ $tank->name }}" 
                         data-product-price="{{ $tank->price }}" 
-                        data-product-image="{{ asset('storage/'.$tank->image_url) }}">
+                        data-product-image="{{ asset($tank->image_url) }}">
                     Añadir al carrito
                 </button>
             </div>

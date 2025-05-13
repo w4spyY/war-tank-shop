@@ -103,12 +103,12 @@
             role: document.getElementById('editUserRole').value,
             _token: document.querySelector('input[name="_token"]').value
         };
-    
+        
         if (!formData.name || !formData.lastname || !formData.email) {
             alert('Por favor, complete todos los campos obligatorios.');
             return;
         }
-    
+        
         fetch(`/admin/users/${userId}`, {
             method: 'PUT',
             headers: {
@@ -120,36 +120,25 @@
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
+                throw new Error('Error');
             }
             return response.json();
         })
         .then(data => {
             if (data.success) {
-                const row = document.querySelector(`tr[data-id="${userId}"]`);
-                if (row) {
-                    row.cells[0].textContent = `${formData.name} ${formData.lastname}`;
-                    row.cells[1].textContent = formData.email;
-                    
-                    const roleBadge = row.cells[2].querySelector('.role-badge');
-                    roleBadge.textContent = formData.role === 'admin' ? 'Admin' : 'User';
-                    roleBadge.className = `role-badge px-2 py-1 rounded-full text-xs ${formData.role === 'admin' ? 'bg-[var(--cuarto)] text-[var(--sexto)]' : 'bg-[var(--tercero)] text-[var(--sexto)]'}`;
-                }
-                
                 closeEditUserModal();
-                alert('Usuario actualizado correctamente');
+                window.location.reload();
             } else {
-                throw new Error(data.message || 'Error al actualizar el usuario');
+                throw new Error('Error');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error al actualizar el usuario: ' + error.message);
+            console.log(error);
         });
     }
     
     function deleteUser(userId) {
-        if (!confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+        if (!confirm('¿Estás seguro?')) {
             return;
         }
 
@@ -169,7 +158,7 @@
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
+                throw new Error('Error');
             }
             return response.json();
         })
@@ -179,14 +168,12 @@
                 if (row) {
                     row.remove();
                 }
-                alert('Usuario eliminado correctamente');
             } else {
-                throw new Error(data.message || 'Error al eliminar el usuario');
+                throw new Error('Error');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error al eliminar el usuario: ' + error.message);
+            console.log(error);
         });
     }
 

@@ -104,8 +104,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 //carrito
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::middleware(['auth'])->prefix('cart')->group(function() {
-    Route::get('/', [CartController::class, 'index'])->name('cart.index');
     Route::post('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::get('/confirmation', [CartController::class, 'confirmation'])->name('cart.confirmation');
 });

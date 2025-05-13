@@ -161,28 +161,33 @@
     document.getElementById('createCategoryForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const formData = new FormData(this);
+        const formData = {
+            name: document.getElementById('name').value,
+            type: document.getElementById('type').value,
+            description: document.getElementById('description').value,
+            _token: document.querySelector('input[name="_token"]').value
+        };
         
         fetch('/admin/categories', {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': formData._token,
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: formData
+            body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                this.reset();
-                showAlert('success', 'Categoría creada correctamente');
+                document.getElementById('name').value = '';
+                document.getElementById('description').value = '';
             } else {
-                showAlert('error', data.message || 'Error al crear la categoría');
+                console.log("error");
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            showAlert('error', 'Error al crear la categoría');
+            console.log(error);
         });
     });
 </script>

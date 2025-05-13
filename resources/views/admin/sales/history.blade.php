@@ -12,35 +12,6 @@
         </div>
     </div>
 
-    <!-- Modal para cambiar estado -->
-    <div id="statusModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-[var(--sexto)]">
-            <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-[var(--tercero)]">Cambiar estado de la factura</h3>
-                <form id="statusForm" method="POST" class="mt-4">
-                    @csrf
-                    @method('PUT')
-                    <select name="status" class="w-full p-2 border rounded text-[var(--tercero)] bg-[var(--sexto)]">
-                        <option value="pending">Pendiente</option>
-                        <option value="paid">Pagado</option>
-                        <option value="cancelled">Cancelado</option>
-                        <option value="refunded">Reembolsado</option>
-                    </select>
-                    <div class="flex justify-between mt-4">
-                        <button type="button" onclick="closeModal()"
-                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
-                            Cancelar
-                        </button>
-                        <button type="submit"
-                                class="px-4 py-2 bg-[var(--cuarto)] text-white rounded hover:bg-[var(--quinto)]">
-                            Cambiar Estado
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="bg-[var(--sexto)] rounded-lg shadow-md overflow-hidden border border-[var(--tercero)]">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-[var(--tercero)]">
@@ -148,16 +119,43 @@
     </div>
 </div>
 
+<!--modal estado-->
+<div id="statusModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-[var(--sexto)]">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-[var(--tercero)]">Cambiar estado de la factura</h3>
+            <form id="statusForm" method="POST" class="mt-4">
+                @csrf
+                @method('PUT')
+                <select name="status" class="w-full p-2 border rounded text-[var(--tercero)] bg-[var(--sexto)]">
+                    <option value="pending">Pendiente</option>
+                    <option value="paid">Pagado</option>
+                    <option value="cancelled">Cancelado</option>
+                    <option value="refunded">Reembolsado</option>
+                </select>
+                <div class="flex justify-between mt-4">
+                    <button type="button" onclick="closeModal()"
+                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-[var(--cuarto)] text-white rounded hover:bg-[var(--quinto)]">
+                        Cambiar Estado
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     function openModal(url, currentStatus) {
         const modal = document.getElementById('statusModal');
         const form = document.getElementById('statusForm');
         
-        // Configurar el formulario
         form.action = url;
         form.querySelector('select[name="status"]').value = currentStatus;
         
-        // Mostrar modal
         modal.classList.remove('hidden');
     }
 
@@ -165,7 +163,6 @@
         document.getElementById('statusModal').classList.add('hidden');
     }
 
-    // Cerrar modal al hacer clic fuera
     window.onclick = function(event) {
         const modal = document.getElementById('statusModal');
         if (event.target === modal) {

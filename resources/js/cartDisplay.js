@@ -127,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Evento para el botón de checkout
-    // Evento para el botón de checkout
     checkoutBtn.addEventListener('click', async function() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
@@ -135,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('El carrito está vacío');
             return;
         }
-
+    
         try {
             checkoutBtn.disabled = true;
             checkoutBtn.textContent = 'Procesando...';
@@ -150,14 +149,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ cart }),
                 credentials: 'include'
             });
-
-            // Resto del código...
+    
+            // Verificar si la respuesta es una redirección (no autenticado)
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+    
             const data = await response.json();
-
+    
             if (!response.ok) {
                 throw new Error(data.message || 'Error en el proceso de pago');
             }
-
+    
             localStorage.removeItem('cart');
             updateCartCounter();
             window.location.href = `${checkoutBtn.dataset.confirmationUrl}?invoice=${data.invoice_id}`;
@@ -165,8 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error:', error);
             
-            if (error.message.includes('<html') || error.message.includes('Redirecting')) {
-                alert('Por favor inicia sesión para completar la compra');
+            if (error.message.includes('Unauthenticated')) {
                 window.location.href = checkoutBtn.dataset.loginUrl;
             } else {
                 alert(error.message);
