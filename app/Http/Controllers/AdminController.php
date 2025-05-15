@@ -416,21 +416,18 @@ class AdminController extends Controller
 
         $invoice->update(['status' => $request->status]);
 
-        // Cambia la respuesta JSON por una redirección
         return redirect()->route('admin.sales.history')->with('success', 'Estado de la factura actualizado correctamente');
     }
 
     public function deleteInvoice(Invoice $invoice)
     {
         if ($invoice->status === 'paid') {
-            return redirect()->route('admin.sales.history')
-                        ->with('error', 'No se puede eliminar una factura pagada');
+            return redirect()->route('admin.sales.history')->with('error', 'No se puede eliminar una factura pagada');
         }
 
         $invoice->items()->delete();
         $invoice->delete();
 
-        return redirect()->route('admin.sales.history')
-                    ->with('success', 'Factura eliminada correctamente');
+        return redirect()->route('admin.sales.history')->with('success', 'Factura eliminada correctamente');
     }
 }

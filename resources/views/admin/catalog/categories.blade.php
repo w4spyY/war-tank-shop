@@ -112,40 +112,6 @@
         document.getElementById('editModal').classList.add('hidden');
     }
 
-    function updateUser() {
-        const formData = {
-            id: document.getElementById('editUserId').value,
-            name: document.getElementById('editUserName').value,
-            lastname: document.getElementById('editUserLastname').value,
-            email: document.getElementById('editUserEmail').value,
-            role: document.getElementById('editUserRole').value,
-            _token: document.querySelector('input[name="_token"]').value,
-            _method: 'PUT'
-        };
-
-        fetch(`/admin/users/${formData.id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': formData._token,
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeEditUserModal();
-                window.location.reload();
-            } else {
-                console.log("error");
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }
-
     function deleteCategory(id) {
         if (!confirm('¿Estás seguro?')) {
             return;

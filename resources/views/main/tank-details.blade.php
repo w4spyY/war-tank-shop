@@ -79,19 +79,103 @@
 
     <div class="mt-8 p-6 card-bg rounded-lg shadow-lg">
         <h2 class="text-xl md:text-2xl font-bold card-h1 mb-4">Opiniones de Clientes</h2>
-        <div class="space-y-4">
+
+        <div id="reviews-container" class="space-y-4">
+            @forelse($ratings as $rating)
             <div class="border-b pb-4">
-                <p class="text-base md:text-lg card-h1"><span class="font-semibold">Juan Pérez:</span> ¡Excelente tanque! Muy recomendado.</p>
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-base md:text-lg card-h1 font-semibold">{{ $rating->user->name }}</p>
+                    <span class="text-yellow-400">
+                        @for($i = 1; $i <= 5; $i++)
+                            @if($i <= $rating->rating) ★ @else ☆ @endif
+                        @endfor
+                    </span>
+                </div>
+                <p class="text-base md:text-lg card-h1 mb-1">{{ $rating->review_text }}</p>
+                <p class="text-xs text-[var(--tercero-oscuro)]">{{ $rating->created_at->format('d/m/Y H:i') }}</p>
             </div>
-            <div class="border-b pb-4">
-                <p class="text-base md:text-lg card-h1"><span class="font-semibold">Ana Gómez:</span> El servicio de entrega fue impecable.</p>
+            @empty
+            <div class="text-center py-4">
+                <p class="text-[var(--tercero-oscuro)]">No hay opiniones todavía.</p>
             </div>
-            <div class="border-b pb-4">
-                <p class="text-base md:text-lg card-h1"><span class="font-semibold">Carlos Ruiz:</span> El tanque superó mis expectativas.</p>
-            </div>
+            @endforelse
         </div>
+
+        @auth
+        <div class="mt-6 pt-4 border-t">
+            <h3 class="text-lg font-semibold card-h1 mb-3">Añadir tu opinión</h3>
+            <form id="review-form" action="{{ route('tanks.ratings.store', $tank->id) }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="rating" class="block text-sm font-medium card-h1 mb-1">Valoración</label>
+                    <select id="rating" name="rating" class="w-full p-2 rounded border border-[var(--tercero-oscuro)] bg-[var(--primero)] text-[var(--tercero)]" required>
+                        <option value="">Selecciona una valoración</option>
+                        <option value="5">★★★★★ Excelente</option>
+                        <option value="4">★★★★☆ Muy Bueno</option>
+                        <option value="3">★★★☆☆ Bueno</option>
+                        <option value="2">★★☆☆☆ Regular</option>
+                        <option value="1">★☆☆☆☆ Malo</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="review_text" class="block text-sm font-medium card-h1 mb-1">Comentario</label>
+                    <textarea id="review_text" name="review_text" rows="3" class="w-full p-2 rounded border border-[var(--tercero-oscuro)] bg-[var(--primero)] text-[var(--tercero)]" required></textarea>
+                </div>
+                <button type="submit" class="btn-add-to-cart bg-[var(--cuarto)] p-2 px-4 text-[var(--sexto)] font-bold rounded-lg hover:bg-[var(--quinto)] transition-all duration-100">
+                    Enviar Opinión
+                </button>
+            </form>
+        </div>
+        @else
+        <div class="mt-4 pt-4 border-t text-center">
+            <p class="text-[var(--tercero-oscuro)]">
+                <a href="{{ route('login') }}" class="text-[var(--cuarto)] hover:underline">Inicia sesión</a> para dejar tu opinión.
+            </p>
+        </div>
+        @endauth
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const reviewForm = document.getElementById('review-form');
+
+    reviewForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = reviewForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+                
+            const formData = new FormData(reviewForm);
+            const response = await fetch(reviewForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            });
+                
+            const data = await response.json();
+                
+            //console.log(response.ok);
+                
+            document.getElementById('reviews-container').innerHTML = data.html;
+            reviewForm.reset();
+        } catch (error) {
+            console.log(error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+});
+</script>
 
 @vite(['resources/js/cart.js'])
 

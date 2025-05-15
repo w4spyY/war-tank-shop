@@ -49,19 +49,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return response;
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
             return response.json();
         })
         .then(data => {
             if (data.success) {
-                console.log("Éxito: Pregunta enviada");
+                console.log("pepepepepepe");
                 form.reset();
             }
         })
         .catch(error => {
-            console.error("Error en el envío:", error);
+            console.log(error);
         })
         .finally(() => {
             submitText.textContent = 'Enviar Pregunta';

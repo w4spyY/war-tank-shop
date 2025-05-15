@@ -15,12 +15,11 @@
             </div>
         </div>
 
-        <!-- Formulario para Tanque -->
+        <!--tanques-->
         <div id="tankForm">
             <form id="createTankForm">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Campos básicos -->
                     <div>
                         <label for="tank_name" class="block text-sm font-medium text-[var(--tercero)] mb-2">Nombre del Tanque*</label>
                         <input type="text" id="tank_name" name="name" required class="w-full px-3 py-2 border border-[var(--tercero)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--cuarto)] bg-[var(--tercero)]">

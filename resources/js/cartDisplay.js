@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Obtener el carrito de localStorage
+
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartItemsContainer = document.getElementById('cart-items-container');
     const emptyCartMessage = document.getElementById('empty-cart-message');
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartTotal = document.getElementById('cart-total');
     const checkoutBtn = document.getElementById('checkout-btn');
 
-    // Mostrar u ocultar elementos según si hay items
+    //mostrar o no
     if (cart.length > 0) {
         emptyCartMessage.classList.add('hidden');
         cartItemsContainer.classList.remove('hidden');
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cartItemsContainer.classList.add('hidden');
     }
 
-    // Función para renderizar los items del carrito
+    //renderizar cart
     function renderCartItems(cartItems) {
         cartItemsList.innerHTML = '';
         
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
             cartItemsList.appendChild(itemElement);
         });
 
-        // Añadir eventos a los botones de cantidad y eliminar
         document.querySelectorAll('.quantity-btn').forEach(btn => {
             btn.addEventListener('click', updateQuantity);
         });
@@ -67,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Función para actualizar la cantidad de un item
     function updateQuantity(e) {
         const index = e.target.getAttribute('data-index');
         const action = e.target.getAttribute('data-action');
@@ -85,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCartCounter();
     }
 
-    // Función para eliminar un item del carrito
     function removeItem(e) {
         const index = e.target.closest('.remove-item-btn').getAttribute('data-index');
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -104,10 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCartCounter();
     }
 
-    // Función para actualizar el resumen del carrito
+    //resumen
     function updateCartSummary(cartItems) {
         const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const tax = subtotal * 0.21; // 21% IVA
+        const tax = subtotal * 0.21;
         const total = subtotal + tax;
         
         cartSubtotal.textContent = `€${subtotal.toFixed(2)}`;
@@ -115,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cartTotal.textContent = `€${total.toFixed(2)}`;
     }
 
-    // Función para actualizar el contador del carrito (similar a la anterior)
+    //contador
     function updateCartCounter() {
         const cartCounter = document.getElementById('cart-counter');
         if (cartCounter) {
@@ -126,12 +123,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Evento para el botón de checkout
+    //boton checkout event
     checkoutBtn.addEventListener('click', async function() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
         if (cart.length === 0) {
-            alert('El carrito está vacío');
             return;
         }
     
@@ -150,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 credentials: 'include'
             });
     
-            // Verificar si la respuesta es una redirección (no autenticado)
+            //no permitir redireccion
             if (response.redirected) {
                 window.location.href = response.url;
                 return;
@@ -158,21 +154,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
             const data = await response.json();
     
-            if (!response.ok) {
-                throw new Error(data.message || 'Error en el proceso de pago');
-            }
-    
             localStorage.removeItem('cart');
             updateCartCounter();
             window.location.href = `${checkoutBtn.dataset.confirmationUrl}?invoice=${data.invoice_id}`;
             
         } catch (error) {
-            console.error('Error:', error);
+            console.log(error);
             
             if (error.message.includes('Unauthenticated')) {
                 window.location.href = checkoutBtn.dataset.loginUrl;
             } else {
-                alert(error.message);
+                console.log("error");
             }
             
             checkoutBtn.disabled = false;

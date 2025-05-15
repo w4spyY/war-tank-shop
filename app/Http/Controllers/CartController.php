@@ -35,39 +35,35 @@ class CartController extends Controller
             $user = Auth::user();
             $cart = $request->cart;
 
-            // Calcular totales
             $subtotal = collect($cart)->sum(function($item) {
                 return $item['price'] * $item['quantity'];
             });
 
-            $tax = $subtotal * 0.21; // IVA del 21%
+            $tax = $subtotal * 0.21;
             $total = $subtotal + $tax;
 
-            // Crear la factura
             $invoice = Invoice::create([
                 'user_id' => $user->id,
                 'invoice_number' => 'INV-' . Str::upper(Str::random(8)),
                 'subtotal' => $subtotal,
                 'tax' => $tax,
                 'total' => $total,
-                'status' => 'paid', // Como es simulado, marcamos como pagado directamente
+                'status' => 'paid',
                 'payment_method' => 'simulated',
                 'billing_name' => $user->name . ' ' . $user->lastname,
                 'billing_address' => $user->direccion,
-                'billing_tax_id' => '', // Puedes añadir este campo a users si es necesario
+                'billing_tax_id' => '',
             ]);
 
-            // Crear los items de la factura y actualizar stocks/ventas
             foreach ($cart as $item) {
                 $product = $item['type'] === 'tank' 
                     ? Tank::find($item['id'])
                     : TankPart::find($item['id']);
 
                 if (!$product) {
-                    continue; // O manejar el error como prefieras
+                    continue;
                 }
 
-                // Crear invoice item
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_type' => $item['type'],
@@ -76,10 +72,9 @@ class CartController extends Controller
                     'unit_price' => $item['price'],
                     'total_price' => $item['price'] * $item['quantity'],
                     'name' => $product->name,
-                    'tax_rate' => 21, // 21% IVA
+                    'tax_rate' => 21,
                 ]);
 
-                // Actualizar stock y ventas
                 $product->decrement('stock', $item['quantity']);
                 $product->increment('sells', $item['quantity']);
             }
@@ -108,7 +103,6 @@ class CartController extends Controller
         $invoiceId = $request->query('invoice');
         $invoice = Invoice::with('items')->findOrFail($invoiceId);
 
-        // Verificar que la factura pertenece al usuario autenticado
         if ($invoice->user_id !== Auth::id()) {
             abort(403);
         }

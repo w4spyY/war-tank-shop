@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Seleccionar todos los botones de "Añadir al carrito"
+    //botones añadir al carrito
     const addToCartButtons = document.querySelectorAll('.btn-add-to-cart');
     
-    // Añadir evento click a cada botón
+    //evento para todos
     addToCartButtons.forEach(button => {
         button.addEventListener('click', addToCart);
     });
 
-    // Función para añadir producto al carrito
     function addToCart(event) {
         const button = event.currentTarget;
         const product = {
@@ -20,31 +19,26 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         console.log(product.image);
+        //console.log(product);
 
-        // Obtener el carrito actual de localStorage
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         
-        // Verificar si el producto ya está en el carrito
+        //ya existe?
         const existingItemIndex = cart.findIndex(item => 
             item.id === product.id && item.type === product.type
         );
 
         if (existingItemIndex !== -1) {
-            // Si el producto ya existe, incrementar la cantidad
             cart[existingItemIndex].quantity += 1;
         } else {
-            // Si no existe, añadir el nuevo producto
             cart.push(product);
         }
 
-        // Guardar el carrito actualizado en localStorage
+        //guardar
         localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Actualizar el contador del carrito (si existe)
         updateCartCounter();
     }
 
-    // Función para actualizar el contador del carrito
     function updateCartCounter() {
         const cartCounter = document.getElementById('cart-counter');
         if (cartCounter) {
@@ -55,6 +49,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Inicializar el contador del carrito al cargar la página
     updateCartCounter();
 });

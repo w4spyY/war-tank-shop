@@ -4,9 +4,6 @@
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white p-8 rounded-lg shadow-md max-w-3xl mx-auto">
         <div class="text-center mb-8">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
             <h1 class="text-3xl font-bold mb-2">¡Pago Completado con Éxito!</h1>
             <p class="text-gray-600">Gracias por tu compra. Aquí está el resumen de tu pedido.</p>
         </div>

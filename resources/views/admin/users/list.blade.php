@@ -104,11 +104,6 @@
             _token: document.querySelector('input[name="_token"]').value
         };
         
-        if (!formData.name || !formData.lastname || !formData.email) {
-            alert('Por favor, complete todos los campos obligatorios.');
-            return;
-        }
-        
         fetch(`/admin/users/${userId}`, {
             method: 'PUT',
             headers: {
@@ -119,9 +114,6 @@
             body: JSON.stringify(formData)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error');
-            }
             return response.json();
         })
         .then(data => {
@@ -129,7 +121,9 @@
                 closeEditUserModal();
                 window.location.reload();
             } else {
-                throw new Error('Error');
+                //console.log("pepe");
+                //console.log(data.message);
+                //console.log(data.errors);
             }
         })
         .catch(error => {
@@ -169,7 +163,7 @@
                     row.remove();
                 }
             } else {
-                throw new Error('Error');
+                console.log("no hay user");
             }
         })
         .catch(error => {

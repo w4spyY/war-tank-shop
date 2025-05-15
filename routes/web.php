@@ -103,6 +103,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     });
 });
 
+//opiniones de tanques
+// routes/web.php
+Route::get('/tanks/{id}', [TankController::class, 'show'])->name('tanks.show');
+Route::post('/tanks/{id}/ratings', [TankController::class, 'storeRating'])
+    ->middleware('auth')
+    ->name('tanks.ratings.store');
+Route::get('/tanks/{id}/reviews', [TankController::class, 'show'])
+    ->name('tanks.reviews.index');
+
 //carrito
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::middleware(['auth'])->prefix('cart')->group(function() {
